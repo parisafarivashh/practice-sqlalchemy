@@ -3,6 +3,7 @@ from sqlalchemy import Column, ForeignKey, \
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
+# Connection
 engine = create_engine(
     "postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice"
 )
