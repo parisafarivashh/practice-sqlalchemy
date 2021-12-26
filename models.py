@@ -12,7 +12,7 @@ Base = declarative_base()
 
 
 member_room = Table(
-    'members_room', Base.metadata,
+    'member_room', Base.metadata,
     Column(
         'member_id',
         ForeignKey('member.id'),
@@ -58,7 +58,7 @@ class Member(Base):
     )
     messages = relationship(
         'Message',
-        secondary=members_room,
+        secondary=member_room,
         back_populates='member',
         lazy='joined'
     )
@@ -84,7 +84,7 @@ class Room(Base):
     members = relationship(
         'Member',
         order_by='room.id',
-        secondary=members_room,
+        secondary=member_room,
         back_populates='rooms',
         lazy='joined'
     )
