@@ -53,12 +53,12 @@ class Member(Base):
     )
     rooms = relationship(
         'Room',
+        secondary=member_room,
         back_populates='member',
         lazy='joined'
     )
     messages = relationship(
         'Message',
-        secondary=member_room,
         back_populates='member',
         lazy='joined'
     )
