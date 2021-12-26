@@ -1,0 +1,7 @@
+greenlet==1.1.2
+packaging==21.3
+psycopg2==2.9.2
+psycopg2-binary==2.9.2
+pyparsing==3.0.6
+SQLAlchemy==1.4.29
+sqlalchemy-redshift==0.8.9
