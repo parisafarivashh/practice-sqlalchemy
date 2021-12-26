@@ -33,7 +33,7 @@ class Room(Base):
     title = Column('title', String)
     creator_id = Column('creator_id', Integer, ForeignKey('member.id'))
     member = relationship('Member', order_by='room.id', back_populates='room', lazy='joined')
-    messages = relationship('Message', order_by='room.id', back_populate='room', lazy='joined' )
+    messages = relationship('Message', order_by='room.id', back_populate='room', lazy='joined')
 
 
 class Message(Base):
