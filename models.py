@@ -28,6 +28,12 @@ class Member(Base):
         back_populates='member',
         lazy='joined'
     )
+    messages = relationship(
+        'Message',
+        secondary=members_room,
+        back_populates='member',
+        lazy='joined'
+    )
 
 
 class Room(Base):
@@ -43,3 +49,31 @@ class Room(Base):
         back_populates='rooms',
         lazy='joined'
     )
+    messages = relationship(
+        'Message',
+        order_by='room.id',
+        back_populates='room',
+        lazy='joined'
+    )
+
+
+class Message(Base):
+    __tablename__ = 'message'
+
+    id = Column(Integer, primary_key=True)
+    sender_id = Column(Integer, ForeignKey('member.id'))
+    member = relationship(
+        'Member',
+        back_populates='messages',
+        lazy='joined'
+    )
+    body = Column('body', String)
+    room_id = Column(Integer, ForeignKey('room.id'))
+    room = relationship(
+        'Room',
+        back_populates='message',
+        lazy='joined'
+    )
+
+
+Base.metadata.create_all(bind=engine)
