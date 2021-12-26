@@ -10,8 +10,8 @@ Base = declarative_base()
 
 
 members_room = Table('members_room', Base.metadata,
-    Column('member_id', ForeignKey('member.id')),
-    Column('room_id', ForeignKey('room.id'))
+    Column('member_id', ForeignKey('member.id'), primary_key=True),
+    Column('room_id', ForeignKey('room.id'), primary_key=True)
 )
 
 
