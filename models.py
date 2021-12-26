@@ -10,56 +10,42 @@ engine = create_engine(
 Base = declarative_base()
 
 
-member_room = Table(
-    'member_room', Base.metadata,
-    Column(
-        'member_id',
-        ForeignKey('member.id'),
-        primary_key=True),
-    Column(
-        'room_id',
-        ForeignKey('room.id'),
-        primary_key=True)
-)
-
-
 class Member(Base):
     __tablename__ = 'member'
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
     )
     title = Column(
         'title',
         String,
-        nullable=True
+        nullable=True,
     )
     first_name = Column(
         'first_name',
         String,
-        nullable=False
+        nullable=False,
     )
     last_name = Column(
         'last_name',
         String,
-        nullable=True
+        nullable=True,
     )
     birthday = Column(
         'birthday',
         Date,
-        nullable=True
+        nullable=True,
     )
     rooms = relationship(
         'Room',
-        secondary=member_room,
         back_populates='member',
-        lazy='joined'
+        lazy='joined',
     )
     messages = relationship(
         'Message',
         back_populates='member',
-        lazy='joined'
+        lazy='joined',
     )
 
 
@@ -68,30 +54,29 @@ class Room(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
     )
     title = Column(
         'title',
         String,
-        nullable=False
+        nullable=False,
     )
     creator_id = Column(
         'creator_id',
         Integer,
-        ForeignKey('member.id')
+        ForeignKey('member.id'),
     )
     members = relationship(
         'Member',
         order_by='room.id',
-        secondary=member_room,
         back_populates='rooms',
-        lazy='joined'
+        lazy='joined',
     )
     messages = relationship(
         'Message',
         order_by='room.id',
         back_populates='room',
-        lazy='joined'
+        lazy='joined',
     )
 
 
@@ -100,30 +85,30 @@ class Message(Base):
 
     id = Column(
         Integer,
-        primary_key=True
+        primary_key=True,
     )
     sender_id = Column(
         Integer,
-        ForeignKey('member.id')
+        ForeignKey('member.id'),
     )
     member = relationship(
         'Member',
         back_populates='messages',
-        lazy='joined'
+        lazy='joined',
     )
     body = Column(
         'body',
         String,
-        nullable=True
+        nullable=True,
     )
     room_id = Column(
         Integer,
-        ForeignKey('room.id')
+        ForeignKey('room.id'),
     )
     room = relationship(
         'Room',
         back_populates='message',
-        lazy='joined'
+        lazy='joined',
     )
 
 
