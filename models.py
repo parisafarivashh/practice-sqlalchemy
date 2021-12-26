@@ -3,6 +3,7 @@ from sqlalchemy import Column, ForeignKey, \
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
+
 # Connection
 engine = create_engine(
     "postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice"
@@ -10,9 +11,16 @@ engine = create_engine(
 Base = declarative_base()
 
 
-members_room = Table('members_room', Base.metadata,
-    Column('member_id', ForeignKey('member.id'), primary_key=True),
-    Column('room_id', ForeignKey('room.id'), primary_key=True)
+member_room = Table(
+    'members_room', Base.metadata,
+    Column(
+        'member_id',
+        ForeignKey('member.id'),
+        primary_key=True),
+    Column(
+        'room_id',
+        ForeignKey('room.id'),
+        primary_key=True)
 )
 
 
