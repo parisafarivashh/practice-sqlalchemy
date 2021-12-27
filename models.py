@@ -87,7 +87,7 @@ class Message(Base):
         Integer,
         ForeignKey('member.id'),
     )
-    member = relationship(
+    sender = relationship(
         'Member',
         back_populates='messages',
         lazy='joined',
