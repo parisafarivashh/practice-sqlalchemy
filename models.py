@@ -37,9 +37,9 @@ class Member(Base):
         Date,
         nullable=True,
     )
-    rooms = relationship(
+    creator_room = relationship(
         'Room',
-        back_populates='member',
+        back_populates='creator',
         lazy='joined',
     )
     messages = relationship(
@@ -69,7 +69,7 @@ class Room(Base):
     creator = relationship(
         'Member',
         order_by='room.id',
-        back_populates='rooms',
+        back_populates='creator_room',
         lazy='joined',
     )
     messages = relationship(
