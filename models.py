@@ -1,6 +1,8 @@
+import pytest
+
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -113,4 +115,36 @@ class Message(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
+
+class Test:
+
+    @pytest.fixture
+    def setup(self):
+        Session = sessionmaker(bind=engine)
+        self.session = Session()
+
+        self.member_1 = Member(
+            title='first_title',
+            first_name='parisa',
+            last_name='farivash',
+        )
+        self.member_2 = Member(
+            title='second_title',
+            first_name='sara',
+            last_name='amiri',
+        )
+        self.session.add_all([self.member_1, self.member_2])
+
+
+
+
+
+
+        self.session.commit()
+
+
+
+
+
 
