@@ -63,7 +63,7 @@ class Room(Base):
         Integer,
         ForeignKey('member.id'),
     )
-    member = relationship(
+    creator = relationship(
         'Member',
         order_by='room.id',
         back_populates='rooms',
