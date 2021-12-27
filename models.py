@@ -165,7 +165,7 @@ class TestQuery(Config):
         member = self.session.query(Member).get(self.member_1.id)
         assert member.first_name == 'parisa'
 
-        assert len(member.rooms) == 1
+        assert len(member.creator_room) == 0
 
     def test_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
