@@ -173,12 +173,17 @@ class TestQuery(Config):
         self.session.add(room_1)
         self.session.commit()
 
-        creator_count = room_1.creator
-        assert creator_count.id == self.member_1.id
+        assert room_1.creator_id == self.member_1.id
 
     def test_message(self, setup):
         message_1 = self.session.query(Message).get(self.message_1.id)
         assert message_1.body == 'Hi'
+
+        message_1.sender_id = self.member_2.id
+        self.session.add(message_1)
+        self.session.commit()
+
+        assert message_1.sender_id == self.member_2.id
 
 
 
