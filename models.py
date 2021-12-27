@@ -9,10 +9,8 @@ engine = create_engine(
 )
 Base = declarative_base()
 
-
 class Member(Base):
     __tablename__ = 'member'
-
     id = Column(
         Integer,
         primary_key=True,
@@ -51,7 +49,6 @@ class Member(Base):
 
 class Room(Base):
     __tablename__ = 'room'
-
     id = Column(
         Integer,
         primary_key=True,
@@ -82,7 +79,6 @@ class Room(Base):
 
 class Message(Base):
     __tablename__ = 'message'
-
     id = Column(
         Integer,
         primary_key=True,
