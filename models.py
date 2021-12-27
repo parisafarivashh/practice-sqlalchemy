@@ -157,3 +157,21 @@ class Test:
             room_id=self.room_2
         )
         self.session.add_all([self.message_1, self.message_2])
+
+    @pytest.mark.member
+    def test_get_member(self):
+        member_1 = self.session.query(Member).get(self.member_1.id)
+        assert member_1.first_name == self.member_1.first_name
+
+    @pytest.mark.room
+    def test_get_room(self):
+        room_1 = self.session.query(Room).get(self.room_1.id)
+        assert room_1.title == self.room_1.title
+
+    @pytest.mark.message
+    def test_get_message(self):
+        message_1 = self.session.query(Message).get(self.message_1)
+        assert message_1.body == self.message_1.body
+
+
+
