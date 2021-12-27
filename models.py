@@ -135,16 +135,3 @@ class Test:
             last_name='amiri',
         )
         self.session.add_all([self.member_1, self.member_2])
-
-
-
-
-
-
-        self.session.commit()
-
-
-
-
-
-
