@@ -162,8 +162,10 @@ class Config:
 class TestQuery(Config):
 
     def test_member(self, setup):
-        first_member = self.session.query(Member).get(self.member_1.id)
-        assert first_member.first_name == 'parisa'
+        member = self.session.query(Member).get(self.member_1.id)
+        assert member.first_name == 'parisa'
+
+        assert len(member.rooms) == 1
 
     def test_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
