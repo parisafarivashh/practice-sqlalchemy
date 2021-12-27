@@ -124,6 +124,11 @@ class Config:
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
+        # self.session.query(Member).delete()
+        # self.session.query(Message).delete()
+        # self.session.query(Room).delete()
+        # .metadata.self.session
+
         self.member_1 = Member(
             title='first_title',
             first_name='parisa',
@@ -164,9 +169,17 @@ class TestQueryGet(Config):
         room_1 = self.session.query(Room).get(self.room_1.id)
         assert room_1.title == 'first_room'
 
+        room_1.creator = self.member_1
+        self.session.add(room_1)
+        self.session.commit()
+
+        creator_count = room_1.creator
+        assert creator_count.id == self.member_1.id
+
     def test_get_message(self, setup):
         message_1 = self.session.query(Message).get(self.message_1.id)
         assert message_1.body == 'Hi'
+
 
 
 
