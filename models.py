@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 engine = create_engine(
-    "postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice"
+    'postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice'
 )
 Base = declarative_base()
 
