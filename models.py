@@ -135,3 +135,25 @@ class Test:
             last_name='amiri',
         )
         self.session.add_all([self.member_1, self.member_2])
+
+        self.room_1 = Room(
+            title='first_room',
+            creator_id=self.member_1,
+        )
+        self.room_2 = Room(
+            title='second_room',
+            creator=self.member_2,
+        )
+        self.session.add_all([self.room_1, self.room_2])
+
+        self.message_1 = Message(
+            sender_id=self.member_1,
+            body='Hi',
+            room_id=self.room_1,
+        )
+        self.message_2 = Message(
+            sender_id=self.member_2,
+            body='Ok',
+            room_id=self.room_2
+        )
+        self.session.add_all([self.message_1, self.message_2])
