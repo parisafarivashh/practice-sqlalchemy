@@ -70,13 +70,13 @@ class Room(Base):
     )
     creator = relationship(
         'Member',
-        order_by='room.id',
+        # order_by='room.id',
         back_populates='creator_room',
         lazy='joined',
     )
     messages = relationship(
         'Message',
-        order_by='room.id',
+        # order_by='room.id',
         back_populates='room',
         lazy='joined',
     )
@@ -117,7 +117,7 @@ class Message(Base):
 Base.metadata.create_all(bind=engine)
 
 
-class Test:
+class Config:
 
     @pytest.fixture
     def setup(self):
@@ -127,51 +127,47 @@ class Test:
         self.member_1 = Member(
             title='first_title',
             first_name='parisa',
-            last_name='farivash',
+            last_name='farivash'
         )
         self.member_2 = Member(
             title='second_title',
             first_name='sara',
-            last_name='amiri',
+            last_name='amiri'
         )
         self.session.add_all([self.member_1, self.member_2])
 
         self.room_1 = Room(
             title='first_room',
-            creator_id=self.member_1,
         )
         self.room_2 = Room(
             title='second_room',
-            creator=self.member_2,
         )
         self.session.add_all([self.room_1, self.room_2])
 
         self.message_1 = Message(
-            sender_id=self.member_1,
             body='Hi',
-            room_id=self.room_1,
         )
         self.message_2 = Message(
-            sender_id=self.member_2,
             body='Ok',
-            room_id=self.room_2
         )
         self.session.add_all([self.message_1, self.message_2])
+        self.session.commit()
 
-    @pytest.mark.member
-    def test_get_member(self):
-        member_1 = self.session.query(Member).get(self.member_1.id)
-        assert member_1.first_name == self.member_1.first_name
 
-    @pytest.mark.room
-    def test_get_room(self):
+class TestQueryGet(Config):
+
+    def test_get_member(self, setup):
+        first_member = self.session.query(Member).get(self.member_1.id)
+        assert first_member.first_name == 'parisa'
+
+    def test_get_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
-        assert room_1.title == self.room_1.title
+        assert room_1.title == 'first_room'
 
-    @pytest.mark.message
-    def test_get_message(self):
-        message_1 = self.session.query(Message).get(self.message_1)
-        assert message_1.body == self.message_1.body
+    def test_get_message(self, setup):
+        message_1 = self.session.query(Message).get(self.message_1.id)
+        assert message_1.body == 'Hi'
+
 
 
 
