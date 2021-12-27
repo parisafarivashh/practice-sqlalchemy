@@ -159,13 +159,13 @@ class Config:
         self.session.commit()
 
 
-class TestQueryGet(Config):
+class TestQuery(Config):
 
-    def test_get_member(self, setup):
+    def test_member(self, setup):
         first_member = self.session.query(Member).get(self.member_1.id)
         assert first_member.first_name == 'parisa'
 
-    def test_get_room(self, setup):
+    def test_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
         assert room_1.title == 'first_room'
 
@@ -176,7 +176,7 @@ class TestQueryGet(Config):
         creator_count = room_1.creator
         assert creator_count.id == self.member_1.id
 
-    def test_get_message(self, setup):
+    def test_message(self, setup):
         message_1 = self.session.query(Message).get(self.message_1.id)
         assert message_1.body == 'Hi'
 
