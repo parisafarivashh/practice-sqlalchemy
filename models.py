@@ -44,7 +44,7 @@ class Member(Base):
     )
     messages = relationship(
         'Message',
-        back_populates='member',
+        back_populates='sender',
         lazy='joined',
     )
 
