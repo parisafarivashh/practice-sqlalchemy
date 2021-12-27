@@ -1,7 +1,8 @@
 from sqlalchemy import Column, ForeignKey, \
-    Integer, String, create_engine, Date, Table
+    Integer, String, create_engine, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
 
 engine = create_engine(
     "postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice"
@@ -11,6 +12,7 @@ Base = declarative_base()
 
 class Member(Base):
     __tablename__ = 'member'
+
     id = Column(
         Integer,
         primary_key=True,
@@ -49,6 +51,7 @@ class Member(Base):
 
 class Room(Base):
     __tablename__ = 'room'
+
     id = Column(
         Integer,
         primary_key=True,
@@ -79,6 +82,7 @@ class Room(Base):
 
 class Message(Base):
     __tablename__ = 'message'
+
     id = Column(
         Integer,
         primary_key=True,
@@ -109,3 +113,4 @@ class Message(Base):
 
 
 Base.metadata.create_all(bind=engine)
+
