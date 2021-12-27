@@ -127,7 +127,6 @@ class Config:
         # self.session.query(Member).delete()
         # self.session.query(Message).delete()
         # self.session.query(Room).delete()
-        # .metadata.self.session
 
         self.member_1 = Member(
             title='first_title',
@@ -165,7 +164,8 @@ class TestQuery(Config):
         member = self.session.query(Member).get(self.member_1.id)
         assert member.first_name == 'parisa'
 
-        assert len(member.creator_room) == 0
+        first_title = self.session.query(Member).filter(Member.title == 'first_title').first()
+        assert first_title.title == 'first_title'
 
     def test_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
@@ -174,7 +174,6 @@ class TestQuery(Config):
         room_1.creator = self.member_1
         self.session.add(room_1)
         self.session.commit()
-
         assert room_1.creator_id == self.member_1.id
 
     def test_message(self, setup):
@@ -186,8 +185,5 @@ class TestQuery(Config):
         self.session.commit()
 
         assert message_1.sender_id == self.member_2.id
-
-
-
 
 
