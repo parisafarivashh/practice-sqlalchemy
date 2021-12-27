@@ -107,7 +107,7 @@ class Message(Base):
     )
     room = relationship(
         'Room',
-        back_populates='message',
+        back_populates='messages',
         lazy='joined',
     )
 
