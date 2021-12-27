@@ -3,11 +3,11 @@ from sqlalchemy import Column, ForeignKey, \
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-
 engine = create_engine(
     "postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice"
 )
 Base = declarative_base()
+
 
 class Member(Base):
     __tablename__ = 'member'
@@ -63,7 +63,7 @@ class Room(Base):
         Integer,
         ForeignKey('member.id'),
     )
-    members = relationship(
+    member = relationship(
         'Member',
         order_by='room.id',
         back_populates='rooms',
