@@ -171,10 +171,10 @@ class TestQuery(Config):
             .first()
         assert first_title.title == 'first_title'
 
-        all_member = self.session.query(Member)\
+        order_by_id = self.session.query(Member)\
             .order_by(Member.id)\
             .all()
-        assert all_member[0].id <= all_member[1].id
+        assert order_by_id[0].id <= order_by_id[1].id
 
     def test_room(self, setup):
         room_1 = self.session.query(Room)\
@@ -185,6 +185,11 @@ class TestQuery(Config):
         self.session.add(room_1)
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
+
+        order_by_id = self.session.query(Room)\
+            .order_by(Room.id)\
+            .all()
+        assert order_by_id[1].id >= order_by_id[0].id
 
     def test_message(self, setup):
         message_1 = self.session.query(Message)\
