@@ -308,9 +308,9 @@ class TestQuery(Config):
         assert exist_none_entity == 1
 
         room_game = self.session.query(Room) \
-            .filter(Room.title.match('game')) \
+            .filter(Room.title.match('first_room')) \
             .count()
-        assert room_game == 0
+        assert room_game == 1
 
         count_messages_of_member = self.session.query(func.count(Member.first_name)) \
             .filter(and_(
