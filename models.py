@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import and_, or_
+from sqlalchemy import func, or_, and_
 
 
 engine = create_engine(
@@ -293,5 +293,14 @@ class TestQuery(Config):
             .filter(Room.title.match('game')) \
             .scalar()
         assert room_game == None
+
+        count_messages_of_member = self.session.query(func.count(Member.first_name)) \
+            .join(Message) \
+            .filter(and_(
+            Member.id == Message.sender_id,
+            Member.id == self.member_2.id)
+            ) \
+            .scalar()
+        assert count_messages_of_member == 0
 
 
