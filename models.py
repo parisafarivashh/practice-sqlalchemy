@@ -3,6 +3,7 @@ import pytest
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date
 from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.sql import exists
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -175,6 +176,11 @@ class TestQuery(Config):
             .order_by(Member.id)\
             .all()
         assert order_by_id[0].id <= order_by_id[1].id
+
+        exist_title_with_s = bool(self.session.query(Member)\
+            .filter(Member.title.startswith('s%')).first())
+        assert exist_title_with_s == True
+
 
     def test_room(self, setup):
         room_1 = self.session.query(Room)\
