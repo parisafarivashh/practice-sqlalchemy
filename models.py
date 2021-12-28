@@ -4,6 +4,7 @@ from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import and_, or_
 
 
 engine = create_engine(
@@ -175,7 +176,7 @@ class TestQuery(Config):
         assert update_title_room.title == 'Friends'
 
         update_body_message = self.session.query(Message) \
-            .filter_by(id=self.message_1.id)\
+            .filter_by(id=self.message_1.id) \
             .one()
         update_body_message.body = 'Bye'
         self.session.add(update_body_message)
@@ -200,14 +201,14 @@ class TestQuery(Config):
 
     def test_exists(self, setup):
         exist_title_with_s = bool(self.session.query(Member) \
-            .filter(Member.title.startswith('s%'))
-            )
+                                  .filter(Member.title.startswith('s%'))
+                                  )
         assert exist_title_with_s == True
 
         exist_creator_with_p = bool(self.session.query(Member) \
-            .join(Room) \
-            .filter(Member.first_name.startswith('p%'))
-            )
+                                    .join(Room) \
+                                    .filter(Member.first_name.startswith('p%'))
+                                    )
         assert exist_creator_with_p == True
 
         exist_sender_with_p = self.session.query(Member) \
@@ -264,12 +265,12 @@ class TestQuery(Config):
 
     def test_limit(self, setup):
         two_limit_member = self.session.query(Member) \
-            .limit(2)\
+            .limit(2) \
             .all()
         assert len(two_limit_member) == 2
 
         four_limit_message = self.session.query(Message) \
-            .limit(4)\
+            .limit(4) \
             .all()
         assert len(four_limit_message) == 4
 
@@ -277,5 +278,15 @@ class TestQuery(Config):
             .limit(2) \
             .all()
         assert len(two_limit_room) == 2
+
+    def test_filter(self, setup):
+        exist_none_entity = self.session.query(Member.title) \
+            .filter(or_(
+            Member.title == None,
+            Member.first_name == None,
+            Member.last_name == None)
+            ) \
+            .first()
+        assert exist_none_entity == None
 
 
