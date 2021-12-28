@@ -168,7 +168,7 @@ class Config:
         self.session.commit()
 
 
-class TestQuery(Config):
+class Test(Config):
 
     def test_update(self, setup):
         update_first_name = self.session.query(Member) \
