@@ -1,10 +1,9 @@
 import pytest
 
 from sqlalchemy import Column, ForeignKey, \
-    Integer, String, create_engine, Date
+    Integer, String, create_engine, Date, func, or_, and_
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import func, or_, and_
 
 
 engine = create_engine(
@@ -69,7 +68,7 @@ class Room(Base):
         Integer,
         ForeignKey(
             'member.id',
-            ondelete='CASCADE'
+            ondelete='CASCADE',
         ),
     )
     creator = relationship(
@@ -135,9 +134,9 @@ class Config:
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-        # self.session.query(Member).delete()
-        # self.session.query(Message).delete()
-        # self.session.query(Room).delete()
+        self.session.query(Member).delete()
+        self.session.query(Message).delete()
+        self.session.query(Room).delete()
 
         self.member_1 = Member(
             title='first_title',
@@ -224,12 +223,11 @@ class TestQuery(Config):
                                     )
         assert exist_creator_with_p == True
 
-        exist_sender_with_p = self.session.query(Member) \
+        exist_sender_with_p = bool(self.session.query(Member) \
             .join(Room) \
             .filter(Member.first_name.startswith('p%')) \
-            .first()
-        check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
-        assert exist_sender_with_p.first_name == check_member.first_name
+            )
+        assert exist_sender_with_p == True
 
     def test_get_member(self, setup):
         get_member = self.session.query(Member) \
@@ -282,10 +280,10 @@ class TestQuery(Config):
             .all()
         assert len(two_limit_member) == 2
 
-        four_limit_message = self.session.query(Message) \
-            .limit(4) \
+        two_limit_message = self.session.query(Message) \
+            .limit(2) \
             .all()
-        assert len(four_limit_message) == 4
+        assert len(two_limit_message) == 2
 
         two_limit_room = self.session.query(Room) \
             .limit(2) \
@@ -293,6 +291,13 @@ class TestQuery(Config):
         assert len(two_limit_room) == 2
 
     def test_count(self, setup):
+        add_title_none = Member(
+            first_name='ali',
+            last_name='nasiri',
+        )
+        self.session.add(add_title_none)
+        self.session.commit()
+
         exist_none_entity = self.session.query(Member.title) \
             .filter(or_(
             Member.title == None,
@@ -300,7 +305,7 @@ class TestQuery(Config):
             Member.last_name == None)
             ) \
             .count()
-        assert exist_none_entity == 0
+        assert exist_none_entity == 1
 
         room_game = self.session.query(Room) \
             .filter(Room.title.match('game')) \
