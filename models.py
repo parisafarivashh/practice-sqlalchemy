@@ -182,6 +182,12 @@ class TestQuery(Config):
             )
         assert exist_title_with_s == True
 
+        update_first_name = self.session.query(Member)\
+            .filter_by(id=self.member_1.id).one()
+        update_first_name.first_name = 'samane'
+        self.session.add(update_first_name)
+        self.session.commit()
+        assert update_first_name.first_name == 'samane'
 
     def test_room(self, setup):
         room_1 = self.session.query(Room)\
@@ -225,9 +231,5 @@ class TestQuery(Config):
             .first()
         check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
         assert exist_sender_with_p.first_name == check_member.first_name
-
-
-
-
 
 
