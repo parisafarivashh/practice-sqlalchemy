@@ -162,6 +162,31 @@ class Config:
 
 class TestQuery(Config):
 
+    def test_update(self, setup):
+        update_first_name = self.session.query(Member) \
+            .filter_by(id=self.member_1.id) \
+            .one()
+        update_first_name.first_name = 'samane'
+        self.session.add(update_first_name)
+        self.session.commit()
+        assert update_first_name.first_name == 'samane'
+
+        update_title_room = self.session.query(Room)\
+            .filter_by(id=self.room_1.id)\
+            .one()
+        update_title_room.title = 'Friends'
+        self.session.add(update_title_room)
+        self.session.commit()
+        assert update_title_room.title == 'Friends'
+
+        update_body_message = self.session.query(Message).\
+            filter_by(id=self.message_1.id).\
+            one()
+        update_body_message.body = 'Bye'
+        self.session.add(update_body_message)
+        self.session.commit()
+        assert update_body_message.body == 'Bye'
+
     def test_member(self, setup):
         get_member = self.session.query(Member)\
             .get(self.member_1.id)
@@ -182,13 +207,7 @@ class TestQuery(Config):
             )
         assert exist_title_with_s == True
 
-        update_first_name = self.session.query(Member)\
-            .filter_by(id=self.member_1.id)\
-            .one()
-        update_first_name.first_name = 'samane'
-        self.session.add(update_first_name)
-        self.session.commit()
-        assert update_first_name.first_name == 'samane'
+
 
     def test_room(self, setup):
         room_1 = self.session.query(Room)\
@@ -211,13 +230,6 @@ class TestQuery(Config):
             )
         assert exist_creator_with_p == True
 
-        update_title_room = self.session.query(Room)\
-            .filter_by(id=self.room_1.id)\
-            .one()
-        update_title_room.title = 'Friends'
-        self.session.add(update_title_room)
-        self.session.commit()
-        assert update_title_room.title == 'Friends'
 
     def test_message(self, setup):
         message_1 = self.session.query(Message)\
