@@ -199,7 +199,14 @@ class TestQuery(Config):
         message_1.sender_id = self.member_2.id
         self.session.add(message_1)
         self.session.commit()
-
         assert message_1.sender_id == self.member_2.id
+
+        order_by_id = self.session.query(Message)\
+            .order_by(Message.id).\
+            all()
+        assert order_by_id[0].id <= order_by_id[1].id
+
+
+
 
 
