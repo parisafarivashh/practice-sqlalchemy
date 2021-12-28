@@ -168,6 +168,9 @@ class TestQuery(Config):
         first_title = self.session.query(Member).filter(Member.title == 'first_title').first()
         assert first_title.title == 'first_title'
 
+        all_member = self.session.query(Member).order_by(Member.id).all()
+        assert all_member[0].id <= all_member[1].id
+
     def test_room(self, setup):
         room_1 = self.session.query(Room).get(self.room_1.id)
         assert room_1.title == 'first_room'
