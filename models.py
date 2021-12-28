@@ -178,7 +178,8 @@ class TestQuery(Config):
         assert order_by_id[0].id <= order_by_id[1].id
 
         exist_title_with_s = bool(self.session.query(Member)\
-            .filter(Member.title.startswith('s%')).first())
+            .filter(Member.title.startswith('s%'))
+            )
         assert exist_title_with_s == True
 
 
@@ -196,6 +197,12 @@ class TestQuery(Config):
             .order_by(Room.id)\
             .all()
         assert order_by_id[1].id >= order_by_id[0].id
+
+        exist_creator_with_p = bool(self.session.query(Member)\
+            .join(Room)\
+            .filter(Member.first_name.startswith('p%'))
+            )
+        assert exist_creator_with_p == True
 
     def test_message(self, setup):
         message_1 = self.session.query(Message)\
