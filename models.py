@@ -227,8 +227,8 @@ class TestQuery(Config):
             .first()
         assert get_title.title == 'first_title'
 
-        get_none = self.session.query(Member)\
-            .filter(Member.last_name == 'last_name')\
+        get_none = self.session.query(Member) \
+            .filter(Member.last_name == 'last_name') \
             .one_or_none()
         assert get_none == None
 
