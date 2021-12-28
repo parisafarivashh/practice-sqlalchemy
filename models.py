@@ -171,17 +171,17 @@ class TestQuery(Config):
         self.session.commit()
         assert update_first_name.first_name == 'samane'
 
-        update_title_room = self.session.query(Room)\
-            .filter_by(id=self.room_1.id)\
+        update_title_room = self.session.query(Room) \
+            .filter_by(id=self.room_1.id) \
             .one()
         update_title_room.title = 'Friends'
         self.session.add(update_title_room)
         self.session.commit()
         assert update_title_room.title == 'Friends'
 
-        update_body_message = self.session.query(Message).\
-            filter_by(id=self.message_1.id).\
-            one()
+        update_body_message = self.session.query(Message) \
+            .filter_by(id=self.message_1.id)\
+            .one()
         update_body_message.body = 'Bye'
         self.session.add(update_body_message)
         self.session.commit()
@@ -204,22 +204,22 @@ class TestQuery(Config):
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
     def test_get_member(self, setup):
-        get_member = self.session.query(Member)\
+        get_member = self.session.query(Member) \
             .get(self.member_1.id)
         assert get_member.first_name == 'parisa'
 
-        get_title = self.session.query(Member)\
-            .filter(Member.title == 'first_title')\
+        get_title = self.session.query(Member) \
+            .filter(Member.title == 'first_title') \
             .first()
         assert get_title.title == 'first_title'
 
-        exist_title_with_s = bool(self.session.query(Member)\
+        exist_title_with_s = bool(self.session.query(Member) \
             .filter(Member.title.startswith('s%'))
             )
         assert exist_title_with_s == True
 
     def test_get_room(self, setup):
-        room_1 = self.session.query(Room)\
+        room_1 = self.session.query(Room) \
             .get(self.room_1.id)
         assert room_1.title == 'first_room'
 
@@ -228,14 +228,14 @@ class TestQuery(Config):
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
 
-        exist_creator_with_p = bool(self.session.query(Member)\
-            .join(Room)\
+        exist_creator_with_p = bool(self.session.query(Member) \
+            .join(Room) \
             .filter(Member.first_name.startswith('p%'))
             )
         assert exist_creator_with_p == True
 
     def test_get_message(self, setup):
-        message_1 = self.session.query(Message)\
+        message_1 = self.session.query(Message) \
             .get(self.message_1.id)
         assert message_1.body == 'Hi'
 
@@ -244,9 +244,9 @@ class TestQuery(Config):
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
 
-        exist_sender_with_p = self.session.query(Member)\
-            .join(Room)\
-            .filter(Member.first_name.startswith('p%'))\
+        exist_sender_with_p = self.session.query(Member) \
+            .join(Room) \
+            .filter(Member.first_name.startswith('p%')) \
             .first()
         check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
         assert exist_sender_with_p.first_name == check_member.first_name
