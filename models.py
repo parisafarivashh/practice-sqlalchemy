@@ -135,9 +135,9 @@ class Config:
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-        self.session.query(Member).delete()
-        self.session.query(Message).delete()
-        self.session.query(Room).delete()
+        # self.session.query(Member).delete()
+        # self.session.query(Message).delete()
+        # self.session.query(Room).delete()
 
         self.member_1 = Member(
             title='first_title',
