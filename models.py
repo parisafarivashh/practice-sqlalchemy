@@ -279,28 +279,35 @@ class TestQuery(Config):
             .all()
         assert len(two_limit_room) == 2
 
-    def test_filter(self, setup):
+    def test_count(self, setup):
         exist_none_entity = self.session.query(Member.title) \
             .filter(or_(
             Member.title == None,
             Member.first_name == None,
             Member.last_name == None)
             ) \
-            .first()
-        assert exist_none_entity == None
+            .count()
+        assert exist_none_entity == 0
 
         room_game = self.session.query(Room) \
             .filter(Room.title.match('game')) \
-            .scalar()
-        assert room_game == None
+            .count()
+        assert room_game == 0
 
         count_messages_of_member = self.session.query(func.count(Member.first_name)) \
-            .join(Message) \
             .filter(and_(
             Member.id == Message.sender_id,
             Member.id == self.member_2.id)
             ) \
             .scalar()
         assert count_messages_of_member == 0
+
+        count_creator_of_room = self.session.query(func.count(Member.first_name)) \
+            .filter(and_(
+            Member.id == Room.creator_id,
+            Member.id == self.member_1.id)
+            ) \
+            .scalar()
+        assert count_creator_of_room == 0
 
 
