@@ -204,14 +204,14 @@ class TestQuery(Config):
 
     def test_exists(self, setup):
         exist_title_with_s = bool(self.session.query(Member) \
-                                  .filter(Member.title.startswith('s%'))
-                                  )
+            .filter(Member.title.startswith('s%'))
+            )
         assert exist_title_with_s == True
 
         exist_creator_with_p = bool(self.session.query(Member) \
-                                    .join(Room) \
-                                    .filter(Member.first_name.startswith('p%'))
-                                    )
+            .join(Room) \
+            .filter(Member.first_name.startswith('p%'))
+            )
         assert exist_creator_with_p == True
 
         exist_sender_with_p = self.session.query(Member) \
