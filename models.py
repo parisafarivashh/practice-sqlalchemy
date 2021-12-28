@@ -289,4 +289,9 @@ class TestQuery(Config):
             .first()
         assert exist_none_entity == None
 
+        room_game = self.session.query(Room) \
+            .filter(Room.title.match('game')) \
+            .scalar()
+        assert room_game == None
+
 
