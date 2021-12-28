@@ -163,14 +163,14 @@ class Config:
 class TestQuery(Config):
 
     def test_member(self, setup):
-        member = self.session.query(Member)\
+        get_member = self.session.query(Member)\
             .get(self.member_1.id)
-        assert member.first_name == 'parisa'
+        assert get_member.first_name == 'parisa'
 
-        first_title = self.session.query(Member)\
+        get_title = self.session.query(Member)\
             .filter(Member.title == 'first_title')\
             .first()
-        assert first_title.title == 'first_title'
+        assert get_title.title == 'first_title'
 
         order_by_id = self.session.query(Member)\
             .order_by(Member.id)\
@@ -210,6 +210,14 @@ class TestQuery(Config):
             .filter(Member.first_name.startswith('p%'))
             )
         assert exist_creator_with_p == True
+
+        update_title_room = self.session.query(Room)\
+            .filter_by(id=self.room_1.id)\
+            .one()
+        update_title_room.title = 'Friends'
+        self.session.add(update_title_room)
+        self.session.commit()
+        assert update_title_room.title == 'Friends'
 
     def test_message(self, setup):
         message_1 = self.session.query(Message)\
