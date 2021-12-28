@@ -162,17 +162,23 @@ class Config:
 class TestQuery(Config):
 
     def test_member(self, setup):
-        member = self.session.query(Member).get(self.member_1.id)
+        member = self.session.query(Member)\
+            .get(self.member_1.id)
         assert member.first_name == 'parisa'
 
-        first_title = self.session.query(Member).filter(Member.title == 'first_title').first()
+        first_title = self.session.query(Member)\
+            .filter(Member.title == 'first_title')\
+            .first()
         assert first_title.title == 'first_title'
 
-        all_member = self.session.query(Member).order_by(Member.id).all()
+        all_member = self.session.query(Member)\
+            .order_by(Member.id)\
+            .all()
         assert all_member[0].id <= all_member[1].id
 
     def test_room(self, setup):
-        room_1 = self.session.query(Room).get(self.room_1.id)
+        room_1 = self.session.query(Room)\
+            .get(self.room_1.id)
         assert room_1.title == 'first_room'
 
         room_1.creator = self.member_1
@@ -181,7 +187,8 @@ class TestQuery(Config):
         assert room_1.creator_id == self.member_1.id
 
     def test_message(self, setup):
-        message_1 = self.session.query(Message).get(self.message_1.id)
+        message_1 = self.session.query(Message)\
+            .get(self.message_1.id)
         assert message_1.body == 'Hi'
 
         message_1.sender_id = self.member_2.id
