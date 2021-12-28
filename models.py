@@ -118,7 +118,7 @@ class Message(Base):
     )
     room = relationship(
         'Room',
-        cascade="all,delete",
+        cascade='all,delete',
         back_populates='messages',
         lazy='joined',
     )
