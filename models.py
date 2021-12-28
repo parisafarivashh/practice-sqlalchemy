@@ -187,7 +187,23 @@ class TestQuery(Config):
         self.session.commit()
         assert update_body_message.body == 'Bye'
 
-    def test_member(self, setup):
+    def test_order_by(self, setup):
+        member_order_by_id = self.session.query(Member) \
+            .order_by(Member.id) \
+            .all()
+        assert member_order_by_id[0].id <= member_order_by_id[1].id
+
+        room_order_by_id = self.session.query(Room) \
+            .order_by(Room.id) \
+            .all()
+        assert room_order_by_id[1].id >= room_order_by_id[0].id
+
+        message_order_by_id = self.session.query(Message) \
+            .order_by(Message.id). \
+            all()
+        assert message_order_by_id[0].id <= message_order_by_id[1].id
+
+    def test_get_member(self, setup):
         get_member = self.session.query(Member)\
             .get(self.member_1.id)
         assert get_member.first_name == 'parisa'
@@ -197,19 +213,12 @@ class TestQuery(Config):
             .first()
         assert get_title.title == 'first_title'
 
-        order_by_id = self.session.query(Member)\
-            .order_by(Member.id)\
-            .all()
-        assert order_by_id[0].id <= order_by_id[1].id
-
         exist_title_with_s = bool(self.session.query(Member)\
             .filter(Member.title.startswith('s%'))
             )
         assert exist_title_with_s == True
 
-
-
-    def test_room(self, setup):
+    def test_get_room(self, setup):
         room_1 = self.session.query(Room)\
             .get(self.room_1.id)
         assert room_1.title == 'first_room'
@@ -219,19 +228,13 @@ class TestQuery(Config):
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
 
-        order_by_id = self.session.query(Room)\
-            .order_by(Room.id)\
-            .all()
-        assert order_by_id[1].id >= order_by_id[0].id
-
         exist_creator_with_p = bool(self.session.query(Member)\
             .join(Room)\
             .filter(Member.first_name.startswith('p%'))
             )
         assert exist_creator_with_p == True
 
-
-    def test_message(self, setup):
+    def test_get_message(self, setup):
         message_1 = self.session.query(Message)\
             .get(self.message_1.id)
         assert message_1.body == 'Hi'
@@ -240,11 +243,6 @@ class TestQuery(Config):
         self.session.add(message_1)
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
-
-        order_by_id = self.session.query(Message)\
-            .order_by(Message.id).\
-            all()
-        assert order_by_id[0].id <= order_by_id[1].id
 
         exist_sender_with_p = self.session.query(Member)\
             .join(Room)\
