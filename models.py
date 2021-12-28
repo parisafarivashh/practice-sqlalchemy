@@ -8,7 +8,7 @@ from sqlalchemy import func, or_, and_
 
 
 engine = create_engine(
-    'postgresql+psycopg2://postgres:postgres@localhost/sqlalchemy_practice'
+    'postgresql+psycopg2://postgres:postgres@localhost/practice'
 )
 Base = declarative_base()
 
@@ -67,7 +67,10 @@ class Room(Base):
     creator_id = Column(
         'creator_id',
         Integer,
-        ForeignKey('member.id'),
+        ForeignKey(
+            'member.id',
+            ondelete='CASCADE'
+        ),
     )
     creator = relationship(
         'Member',
@@ -91,7 +94,10 @@ class Message(Base):
     )
     sender_id = Column(
         Integer,
-        ForeignKey('member.id'),
+        ForeignKey(
+            'member.id',
+            ondelete='CASCADE',
+        ),
     )
     sender = relationship(
         'Member',
@@ -106,7 +112,10 @@ class Message(Base):
     )
     room_id = Column(
         Integer,
-        ForeignKey('room.id'),
+        ForeignKey(
+            'room.id',
+            ondelete='CASCADE',
+        ),
     )
     room = relationship(
         'Room',
@@ -125,6 +134,10 @@ class Config:
     def setup(self):
         Session = sessionmaker(bind=engine)
         self.session = Session()
+
+        self.session.query(Member).delete()
+        self.session.query(Message).delete()
+        self.session.query(Room).delete()
 
         self.member_1 = Member(
             title='first_title',
