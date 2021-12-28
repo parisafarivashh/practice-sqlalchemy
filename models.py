@@ -125,10 +125,6 @@ class Config:
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
-        # self.session.query(Member).delete()
-        # self.session.query(Message).delete()
-        # self.session.query(Room).delete()
-
         self.member_1 = Member(
             title='first_title',
             first_name='parisa',
@@ -231,6 +227,11 @@ class TestQuery(Config):
             .first()
         assert get_title.title == 'first_title'
 
+        get_none = self.session.query(Member)\
+            .filter(Member.last_name == 'last_name')\
+            .one_or_none()
+        assert get_none == None
+
     def test_get_room(self, setup):
         room_1 = self.session.query(Room) \
             .get(self.room_1.id)
@@ -241,6 +242,11 @@ class TestQuery(Config):
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
 
+        get_none = self.session.query(Room) \
+            .filter(Room.title == 'title') \
+            .one_or_none()
+        assert get_none == None
+
     def test_get_message(self, setup):
         message_1 = self.session.query(Message) \
             .get(self.message_1.id)
@@ -250,6 +256,11 @@ class TestQuery(Config):
         self.session.add(message_1)
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
+
+        get_one = self.session.query(Message) \
+            .filter(Message.body == 'sory') \
+            .one_or_none()
+        assert get_one == None
 
     def test_limit(self, setup):
         two_limit_member = self.session.query(Member) \
