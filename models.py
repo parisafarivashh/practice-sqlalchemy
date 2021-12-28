@@ -219,6 +219,14 @@ class TestQuery(Config):
             all()
         assert order_by_id[0].id <= order_by_id[1].id
 
+        exist_sender_with_p = self.session.query(Member)\
+            .join(Room)\
+            .filter(Member.first_name.startswith('p%'))\
+            .first()
+        check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
+        assert exist_sender_with_p.first_name == check_member.first_name
+
+
 
 
 
