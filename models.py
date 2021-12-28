@@ -3,7 +3,6 @@ import pytest
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date
 from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy.sql import exists
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -203,6 +202,25 @@ class TestQuery(Config):
             all()
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
+    def test_exists(self, setup):
+        exist_title_with_s = bool(self.session.query(Member) \
+                                  .filter(Member.title.startswith('s%'))
+                                  )
+        assert exist_title_with_s == True
+
+        exist_creator_with_p = bool(self.session.query(Member) \
+                                    .join(Room) \
+                                    .filter(Member.first_name.startswith('p%'))
+                                    )
+        assert exist_creator_with_p == True
+
+        exist_sender_with_p = self.session.query(Member) \
+            .join(Room) \
+            .filter(Member.first_name.startswith('p%')) \
+            .first()
+        check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
+        assert exist_sender_with_p.first_name == check_member.first_name
+
     def test_get_member(self, setup):
         get_member = self.session.query(Member) \
             .get(self.member_1.id)
@@ -212,11 +230,6 @@ class TestQuery(Config):
             .filter(Member.title == 'first_title') \
             .first()
         assert get_title.title == 'first_title'
-
-        exist_title_with_s = bool(self.session.query(Member) \
-            .filter(Member.title.startswith('s%'))
-            )
-        assert exist_title_with_s == True
 
     def test_get_room(self, setup):
         room_1 = self.session.query(Room) \
@@ -228,12 +241,6 @@ class TestQuery(Config):
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
 
-        exist_creator_with_p = bool(self.session.query(Member) \
-            .join(Room) \
-            .filter(Member.first_name.startswith('p%'))
-            )
-        assert exist_creator_with_p == True
-
     def test_get_message(self, setup):
         message_1 = self.session.query(Message) \
             .get(self.message_1.id)
@@ -243,12 +250,5 @@ class TestQuery(Config):
         self.session.add(message_1)
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
-
-        exist_sender_with_p = self.session.query(Member) \
-            .join(Room) \
-            .filter(Member.first_name.startswith('p%')) \
-            .first()
-        check_member = self.session.query(Member).filter(Member.first_name.startswith('p%')).first()
-        assert exist_sender_with_p.first_name == check_member.first_name
 
 
