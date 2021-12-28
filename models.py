@@ -70,13 +70,12 @@ class Room(Base):
     )
     creator = relationship(
         'Member',
-        # order_by='room.id',
+        cascade="all,delete",
         back_populates='creator_room',
         lazy='joined',
     )
     messages = relationship(
         'Message',
-        # order_by='room.id',
         back_populates='room',
         lazy='joined',
     )
@@ -95,6 +94,7 @@ class Message(Base):
     )
     sender = relationship(
         'Member',
+        cascade="all,delete",
         back_populates='messages',
         lazy='joined',
     )
@@ -109,6 +109,7 @@ class Message(Base):
     )
     room = relationship(
         'Room',
+        cascade="all,delete",
         back_populates='messages',
         lazy='joined',
     )
