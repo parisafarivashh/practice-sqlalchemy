@@ -251,4 +251,20 @@ class TestQuery(Config):
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
 
+    def test_limit(self, setup):
+        two_limit_member = self.session.query(Member) \
+            .limit(2)\
+            .all()
+        assert len(two_limit_member) == 2
+
+        four_limit_message = self.session.query(Message) \
+            .limit(4)\
+            .all()
+        assert len(four_limit_message) == 4
+
+        two_limit_room = self.session.query(Room) \
+            .limit(2) \
+            .all()
+        assert len(two_limit_room) == 2
+
 
