@@ -183,7 +183,8 @@ class TestQuery(Config):
         assert exist_title_with_s == True
 
         update_first_name = self.session.query(Member)\
-            .filter_by(id=self.member_1.id).one()
+            .filter_by(id=self.member_1.id)\
+            .one()
         update_first_name.first_name = 'samane'
         self.session.add(update_first_name)
         self.session.commit()
