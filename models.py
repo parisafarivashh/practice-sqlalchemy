@@ -74,7 +74,7 @@ class Room(Base):
     )
     creator = relationship(
         'Member',
-        cascade="all,delete",
+        cascade='all,delete',
         back_populates='creator_room',
         lazy='joined',
     )
@@ -101,7 +101,7 @@ class Message(Base):
     )
     sender = relationship(
         'Member',
-        cascade="all,delete",
+        cascade='all,delete',
         back_populates='messages',
         lazy='joined',
     )
