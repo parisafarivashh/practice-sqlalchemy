@@ -328,4 +328,3 @@ class Test(Config):
             .scalar()
         assert count_creator_of_room == 0
 
-
