@@ -2,7 +2,7 @@ import pytest
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, or_, and_, exists
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -38,6 +38,9 @@ class Member(Base):
         'birthday',
         Date,
         nullable=True,
+    )
+    full_name = column_property(
+        first_name + ' ' + last_name
     )
     creator_room = relationship(
         'Room',
@@ -216,6 +219,11 @@ class Test(Config):
             .order_by(Message.id) \
             .all()
         assert message_order_by_id[0].id <= message_order_by_id[1].id
+
+        order_by_full_name = self.session.query(Member) \
+            .order_by(Member.full_name) \
+            .all()
+        assert order_by_full_name[0].full_name == 'first_name first_last_name'
 
     def test_exists(self, setup):
         exist_title_with_s = self.session.query(exists() \
