@@ -174,26 +174,27 @@ class Test(Config):
         update_first_name = self.session.query(Member) \
             .filter_by(id=self.member_1.id) \
             .one()
-        update_first_name.first_name = 'samane'
+        update_first_name.first_name = 'edit_first_name'
         self.session.add(update_first_name)
         self.session.commit()
-        assert update_first_name.first_name == 'samane'
+        print(update_first_name.id)
+        assert update_first_name.id != None
 
         update_title_room = self.session.query(Room) \
             .filter_by(id=self.room_1.id) \
             .one()
-        update_title_room.title = 'Friends'
+        update_title_room.title = 'edit_tittle'
         self.session.add(update_title_room)
         self.session.commit()
-        assert update_title_room.title == 'Friends'
+        assert update_title_room.id != None
 
         update_body_message = self.session.query(Message) \
             .filter_by(id=self.message_1.id) \
             .one()
-        update_body_message.body = 'Bye'
+        update_body_message.body = 'edit_body'
         self.session.add(update_body_message)
         self.session.commit()
-        assert update_body_message.body == 'Bye'
+        assert update_body_message.id != None
 
     def test_order_by(self, setup):
         member_order_by_id = self.session.query(Member) \
@@ -232,7 +233,7 @@ class Test(Config):
     def test_get_member(self, setup):
         get_member = self.session.query(Member) \
             .get(self.member_1.id)
-        assert get_member.first_name == 'parisa'
+        assert get_member.first_name == 'first_name'
 
         get_title = self.session.query(Member) \
             .filter(Member.title == 'first_title') \
@@ -262,7 +263,7 @@ class Test(Config):
     def test_get_message(self, setup):
         message_1 = self.session.query(Message) \
             .get(self.message_1.id)
-        assert message_1.body == 'Hi'
+        assert message_1.body == 'first_body'
 
         message_1.sender_id = self.member_2.id
         self.session.add(message_1)
