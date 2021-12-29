@@ -320,9 +320,9 @@ class Test(Config):
 
         count_creator_of_room = self.session.query(func.count(Member.first_name)) \
             .filter(and_(
-            Member.id == Room.creator_id,
-            Member.id == self.member_1.id)
-            ) \
+                Member.id == Room.creator_id,
+                Member.id == self.member_1.id
+            )) \
             .scalar()
         assert count_creator_of_room == 0
 
