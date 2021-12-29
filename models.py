@@ -213,8 +213,8 @@ class Test(Config):
         assert room_order_by_id[1].id >= room_order_by_id[0].id
 
         message_order_by_id = self.session.query(Message) \
-            .order_by(Message.id). \
-            all()
+            .order_by(Message.id) \
+            .all()
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
     def test_exists(self, setup):
