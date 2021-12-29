@@ -1,4 +1,5 @@
 import pytest
+import datetime
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, or_, and_, exists
@@ -41,6 +42,9 @@ class Member(Base):
     )
     full_name = column_property(
         first_name + ' ' + last_name
+    )
+    age = column_property(
+        datetime.datetime.now() - birthday
     )
     creator_room = relationship(
         'Room',
@@ -144,14 +148,16 @@ class Config:
         self.member_1 = Member(
             title='first_title',
             first_name='first_name',
-            last_name='first_last_name'
+            last_name='first_last_name',
+            birthday=datetime.datetime(1997, 9, 1)
         )
         self.session.add(self.member_1)
 
         self.member_2 = Member(
             title='second_title',
             first_name='second_name',
-            last_name='second_last_name'
+            last_name='second_last_name',
+            birthday=datetime.datetime(1998, 7, 1)
         )
         self.session.add(self.member_2)
 
