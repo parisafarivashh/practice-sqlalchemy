@@ -220,6 +220,12 @@ class Test(Config):
             .all()
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
+        order_by_full_name = self.session.query(Member) \
+            .order_by(Member.full_name) \
+            .first()
+        first_full_name = self.member_1.first_name + " " + self.member_1.last_name
+        assert order_by_full_name.full_name == first_full_name
+
     def test_exists(self, setup):
         exist_title_with_s = self.session.query(exists() \
             .where(Member.title.startswith('s%'))) \
@@ -334,4 +340,6 @@ class Test(Config):
             )) \
             .scalar()
         assert count_creator_of_room == 0
+
+
 
