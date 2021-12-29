@@ -312,9 +312,9 @@ class Test(Config):
 
         count_messages_of_member = self.session.query(func.count(Member.first_name)) \
             .filter(and_(
-            Member.id == Message.sender_id,
-            Member.id == self.member_2.id)
-            ) \
+                Member.id == Message.sender_id,
+                Member.id == self.member_2.id
+            )) \
             .scalar()
         assert count_messages_of_member == 0
 
