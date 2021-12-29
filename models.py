@@ -178,7 +178,7 @@ class Test(Config):
 
     def test_update(self, setup):
         update_first_name = self.session.query(Member) \
-            .filter_by(id=self.member_1.id) \
+            .filter(Member.id == self.member_1.id) \
             .one()
         update_first_name.first_name = 'edit_first_name'
         self.session.add(update_first_name)
@@ -186,7 +186,7 @@ class Test(Config):
         assert update_first_name.id != None
 
         update_title_room = self.session.query(Room) \
-            .filter_by(id=self.room_1.id) \
+            .filter(Room.id == self.room_1.id) \
             .one()
         update_title_room.title = 'edit_tittle'
         self.session.add(update_title_room)
@@ -194,7 +194,7 @@ class Test(Config):
         assert update_title_room.id != None
 
         update_body_message = self.session.query(Message) \
-            .filter_by(id=self.message_1.id) \
+            .filter(Message.id == self.message_1.id) \
             .one()
         update_body_message.body = 'edit_body'
         self.session.add(update_body_message)
