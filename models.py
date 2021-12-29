@@ -183,7 +183,7 @@ class Test(Config):
         update_first_name.first_name = 'update_first_name'
         self.session.add(update_first_name)
         self.session.commit()
-        assert update_first_name.id != None
+        assert update_first_name.id is not None
 
         update_title_room = self.session.query(Room) \
             .filter(Room.id == self.room_1.id) \
@@ -191,7 +191,7 @@ class Test(Config):
         update_title_room.title = 'update_tittle'
         self.session.add(update_title_room)
         self.session.commit()
-        assert update_title_room.id != None
+        assert update_title_room.id is not None
 
         update_body_message = self.session.query(Message) \
             .filter(Message.id == self.message_1.id) \
@@ -199,7 +199,7 @@ class Test(Config):
         update_body_message.body = 'update_body'
         self.session.add(update_body_message)
         self.session.commit()
-        assert update_body_message.id != None
+        assert update_body_message.id is not None
 
     def test_order_by(self, setup):
         member_order_by_id = self.session.query(Member) \
@@ -221,17 +221,17 @@ class Test(Config):
         exist_title_with_s = self.session.query(exists() \
             .where(Member.title.startswith('s%'))) \
             .scalar()
-        assert exist_title_with_s == True
+        assert exist_title_with_s is True
 
         exist_room_with_f = self.session.query(exists() \
             .where(Room.title.startswith('f%'))) \
             .scalar()
-        assert exist_room_with_f == True
+        assert exist_room_with_f is True
 
         exist_message_with_p = self.session.query(exists() \
             .where(Message.body.startswith('s%'))) \
             .scalar()
-        assert exist_message_with_p == True
+        assert exist_message_with_p is True
 
     def test_get_member(self, setup):
         get_member = self.session.query(Member) \
@@ -246,7 +246,7 @@ class Test(Config):
         check_id = self.session.query(Member) \
             .filter(Member.id == 0) \
             .one_or_none()
-        assert check_id == None
+        assert check_id is None
 
     def test_get_room(self, setup):
         room_1 = self.session.query(Room) \
@@ -261,7 +261,7 @@ class Test(Config):
         check_id = self.session.query(Room) \
             .filter(Room.id == 0) \
             .one_or_none()
-        assert check_id == None
+        assert check_id is None
 
     def test_get_message(self, setup):
         message_1 = self.session.query(Message) \
@@ -276,7 +276,7 @@ class Test(Config):
         check_id = self.session.query(Message) \
             .filter(Message.id == 0) \
             .one_or_none()
-        assert check_id == None
+        assert check_id is None
 
     def test_limit(self, setup):
         two_limit_member = self.session.query(Member) \
