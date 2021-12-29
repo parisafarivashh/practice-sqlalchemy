@@ -180,7 +180,7 @@ class Test(Config):
         update_first_name = self.session.query(Member) \
             .filter(Member.id == self.member_1.id) \
             .one()
-        update_first_name.first_name = 'edit_first_name'
+        update_first_name.first_name = 'update_first_name'
         self.session.add(update_first_name)
         self.session.commit()
         assert update_first_name.id != None
@@ -188,7 +188,7 @@ class Test(Config):
         update_title_room = self.session.query(Room) \
             .filter(Room.id == self.room_1.id) \
             .one()
-        update_title_room.title = 'edit_tittle'
+        update_title_room.title = 'update_tittle'
         self.session.add(update_title_room)
         self.session.commit()
         assert update_title_room.id != None
@@ -196,7 +196,7 @@ class Test(Config):
         update_body_message = self.session.query(Message) \
             .filter(Message.id == self.message_1.id) \
             .one()
-        update_body_message.body = 'edit_body'
+        update_body_message.body = 'update_body'
         self.session.add(update_body_message)
         self.session.commit()
         assert update_body_message.id != None
