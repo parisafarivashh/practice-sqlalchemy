@@ -177,7 +177,6 @@ class Test(Config):
         update_first_name.first_name = 'edit_first_name'
         self.session.add(update_first_name)
         self.session.commit()
-        print(update_first_name.id)
         assert update_first_name.id != None
 
         update_title_room = self.session.query(Room) \
@@ -238,10 +237,10 @@ class Test(Config):
             .first()
         assert get_title.title == 'first_title'
 
-        get_none = self.session.query(Member) \
-            .filter(Member.last_name == 'last_name') \
+        check_id = self.session.query(Member) \
+            .filter(Member.id == 0) \
             .one_or_none()
-        assert get_none == None
+        assert check_id == None
 
     def test_get_room(self, setup):
         room_1 = self.session.query(Room) \
@@ -253,10 +252,10 @@ class Test(Config):
         self.session.commit()
         assert room_1.creator_id == self.member_1.id
 
-        get_none = self.session.query(Room) \
-            .filter(Room.title == 'title') \
+        check_id = self.session.query(Room) \
+            .filter(Room.id == 0) \
             .one_or_none()
-        assert get_none == None
+        assert check_id == None
 
     def test_get_message(self, setup):
         message_1 = self.session.query(Message) \
@@ -268,10 +267,10 @@ class Test(Config):
         self.session.commit()
         assert message_1.sender_id == self.member_2.id
 
-        get_one = self.session.query(Message) \
-            .filter(Message.body == 'sory') \
+        check_id = self.session.query(Message) \
+            .filter(Message.id == 0) \
             .one_or_none()
-        assert get_one == None
+        assert check_id == None
 
     def test_limit(self, setup):
         two_limit_member = self.session.query(Member) \
