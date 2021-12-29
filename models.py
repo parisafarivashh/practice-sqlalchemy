@@ -213,15 +213,18 @@ class Test(Config):
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
     def test_exists(self, setup):
-        exist_title_with_s = self.session.query(exists().where(Member.title.startswith('s%'))) \
+        exist_title_with_s = self.session.query(exists() \
+            .where(Member.title.startswith('s%'))) \
             .scalar()
         assert exist_title_with_s == True
 
-        exist_room_with_f = self.session.query(exists().where(Room.title.startswith('f%'))) \
+        exist_room_with_f = self.session.query(exists() \
+            .where(Room.title.startswith('f%'))) \
             .scalar()
         assert exist_room_with_f == True
 
-        exist_message_with_p = self.session.query(exists().where(Message.body.startswith('s%'))) \
+        exist_message_with_p = self.session.query(exists() \
+            .where(Message.body.startswith('s%'))) \
             .scalar()
         assert exist_message_with_p == True
 
