@@ -2,7 +2,7 @@ import pytest
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, or_, and_, exists
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -38,6 +38,9 @@ class Member(Base):
         'birthday',
         Date,
         nullable=True,
+    )
+    full_name = column_property(
+        first_name + " " + last_name
     )
     creator_room = relationship(
         'Room',
