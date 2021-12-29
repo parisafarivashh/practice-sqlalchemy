@@ -1,7 +1,7 @@
 import pytest
 
 from sqlalchemy import Column, ForeignKey, \
-    Integer, String, create_engine, Date, func, or_, and_
+    Integer, String, create_engine, Date, func, or_, and_, exists
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -213,22 +213,17 @@ class Test(Config):
         assert message_order_by_id[0].id <= message_order_by_id[1].id
 
     def test_exists(self, setup):
-        exist_title_with_s = bool(self.session.query(Member) \
-                                  .filter(Member.title.startswith('s%'))
-                                  )
+        exist_title_with_s = self.session.query(exists().where(Member.title.startswith('s%'))) \
+            .scalar()
         assert exist_title_with_s == True
 
-        exist_creator_with_p = bool(self.session.query(Member) \
-                                    .join(Room) \
-                                    .filter(Member.first_name.startswith('p%'))
-                                    )
-        assert exist_creator_with_p == True
+        exist_room_with_f = self.session.query(exists().where(Room.title.startswith('f%'))) \
+            .scalar()
+        assert exist_room_with_f == True
 
-        exist_sender_with_p = bool(self.session.query(Member) \
-            .join(Room) \
-            .filter(Member.first_name.startswith('p%')) \
-            )
-        assert exist_sender_with_p == True
+        exist_message_with_p = self.session.query(exists().where(Message.body.startswith('s%'))) \
+            .scalar()
+        assert exist_message_with_p == True
 
     def test_get_member(self, setup):
         get_member = self.session.query(Member) \
