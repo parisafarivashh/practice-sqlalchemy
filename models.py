@@ -143,28 +143,34 @@ class Config:
             first_name='first_name',
             last_name='first_last_name'
         )
+        self.session.add(self.member_1)
+
         self.member_2 = Member(
             title='second_title',
             first_name='second_name',
             last_name='second_last_name'
         )
-        self.session.add_all([self.member_1, self.member_2])
+        self.session.add(self.member_2)
 
         self.room_1 = Room(
             title='first_room',
         )
+        self.session.add(self.room_1)
+
         self.room_2 = Room(
             title='second_room',
         )
-        self.session.add_all([self.room_1, self.room_2])
+        self.session.add(self.room_2)
 
         self.message_1 = Message(
             body='first_body',
         )
+        self.session.add(self.message_1)
+
         self.message_2 = Message(
             body='second_body',
         )
-        self.session.add_all([self.message_1, self.message_2])
+        self.session.add(self.message_2)
         self.session.commit()
 
 
