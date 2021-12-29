@@ -290,18 +290,18 @@ class Test(Config):
 
     def test_count(self, setup):
         add_title_none = Member(
-            first_name='ali',
-            last_name='nasiri',
+            first_name='test_name',
+            last_name='test_last_name',
         )
         self.session.add(add_title_none)
         self.session.commit()
 
         exist_none_entity = self.session.query(Member.title) \
             .filter(or_(
-            Member.title == None,
-            Member.first_name == None,
-            Member.last_name == None)
-            ) \
+                Member.title.is_(None),
+                Member.first_name.is_(None),
+                Member.last_name.is_(None)
+            )) \
             .count()
         assert exist_none_entity == 1
 
