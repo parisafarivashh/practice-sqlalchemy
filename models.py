@@ -3,7 +3,7 @@ import datetime
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, \
-    or_, and_, exists, select, extract, cast
+    or_, and_, exists, extract
 from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import cast
@@ -46,9 +46,9 @@ class Member(Base):
         first_name + ' ' + last_name
     )
     age = column_property(
-        select([(datetime.datetime.today().year - extract('year', birthday)) \
+        datetime.datetime.today().year - extract('year', birthday) \
                 - cast(((datetime.datetime.today().month, datetime.datetime.today().day ) \
-                < (extract('month', birthday), extract('day', birthday))), Integer)]).limit(1).scalar_subquery()
+                < (extract('month', birthday), extract('day', birthday))), Integer)
     )
     creator_room = relationship(
         'Room',
@@ -196,10 +196,10 @@ class Test(Config):
 
         second_member_age = self.session.query(Member) \
             .get(self.member_2.id)
-        second_member_age.birthday = datetime.datetime(1888, 1, 1)
+        second_member_age.birthday = datetime.datetime(1988, 1, 1)
         self.session.add(second_member_age)
         self.session.commit()
-        assert second_member_age.age == 24
+        assert second_member_age.age == 34
 
     def test_update(self, setup):
         update_member = self.session.query(Member) \
