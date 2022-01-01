@@ -3,7 +3,7 @@ import datetime
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, \
-    or_, and_, exists, extract
+    or_, and_, exists, extract, select
 from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import cast
@@ -141,6 +141,9 @@ class Message(Base):
         cascade='all,delete',
         back_populates='messages',
         lazy='joined',
+    )
+    room_title = column_property(
+        select([Room.title]).where(id == Room.messages.id)
     )
 
 
