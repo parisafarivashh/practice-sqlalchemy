@@ -48,7 +48,7 @@ class Member(Base):
     age = column_property(
         select([(datetime.datetime.today().year - extract('year', birthday)) \
                 - cast(((datetime.datetime.today().month, datetime.datetime.today().day ) \
-                        < (extract('month', birthday), extract('day', birthday))), Integer)]).limit(1).scalar_subquery()
+                < (extract('month', birthday), extract('day', birthday))), Integer)]).limit(1).scalar_subquery()
     )
     creator_room = relationship(
         'Room',
@@ -161,7 +161,7 @@ class Config:
             title='second_title',
             first_name='second_name',
             last_name='second_last_name',
-            birthday=datetime.date(1998, 7, 1),
+            birthday=datetime.date(1990, 7, 1),
         )
         self.session.add(self.member_2)
 
@@ -189,22 +189,26 @@ class Config:
 
 class Test(Config):
 
+    def test_age(self, setup):
+        first_member_age = self.session.query(Member) \
+            .get(self.member_1.id)
+        assert first_member_age.age == 24
+
+        second_member_age = self.session.query(Member) \
+            .get(self.member_2.id)
+        second_member_age.birthday = datetime.datetime(1888, 1, 1)
+        self.session.add(second_member_age)
+        self.session.commit()
+        assert second_member_age.age == 24
+
     def test_update(self, setup):
-        update_first_name = self.session.query(Member) \
+        update_member = self.session.query(Member) \
             .filter(Member.id == self.member_1.id) \
             .one()
-        update_first_name.first_name = 'update_first_name'
-        update_first_name.birthday = datetime.date(1988, 1, 1)
-        self.session.add(update_first_name)
+        update_member.first_name = 'update_first_name'
+        self.session.add(update_member)
         self.session.commit()
-        assert update_first_name.id is not None
-
-        get_age = self.session.query(Member) \
-            .get(update_first_name.id)
-        print(update_first_name.birthday)
-        print(get_age.age)
-
-        assert get_age.age == 23
+        assert update_member.id is not None
 
         update_title_room = self.session.query(Room) \
             .filter(Room.id == self.room_1.id) \
