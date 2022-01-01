@@ -55,7 +55,7 @@ class Member(Base):
                 )
                 < (
                     extract('month', birthday),
-                    extract('day', birthday)
+                    extract('day', birthday),
             )), Integer
         )
     )
