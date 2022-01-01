@@ -199,16 +199,13 @@ class Config:
 class Test(Config):
 
     def test_age(self, setup):
-        first_member_age = self.session.query(Member) \
+        member_1 = self.session.query(Member) \
             .get(self.member_1.id)
-        assert first_member_age.age == 24
+        assert member_1.age == 24
 
-        second_member_age = self.session.query(Member) \
-            .get(self.member_2.id)
-        second_member_age.birthday = datetime.datetime(1988, 1, 1)
-        self.session.add(second_member_age)
-        self.session.commit()
-        assert second_member_age.age == 34
+        members = self.session.query(Member) \
+            .order_by(Member.age)
+        assert members[0].age <= members[1].age
 
     def test_update(self, setup):
         update_first_name = self.session.query(Member) \
