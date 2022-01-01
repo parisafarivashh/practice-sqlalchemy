@@ -1,9 +1,12 @@
 import pytest
+import datetime
 
 from sqlalchemy import Column, ForeignKey, \
-    Integer, String, create_engine, Date, func, or_, and_, exists
+    Integer, String, create_engine, Date, func, \
+    or_, and_, exists, extract
 from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.expression import cast
 
 
 engine = create_engine(
@@ -41,6 +44,20 @@ class Member(Base):
     )
     full_name = column_property(
         first_name + ' ' + last_name
+    )
+    age = column_property(
+        datetime.date.today().year
+        - extract('year', birthday)
+        - cast(
+            ((
+                datetime.date.today().month,
+                datetime.date.today().day,
+                )
+                < (
+                    extract('month', birthday),
+                    extract('day', birthday),
+            )), Integer
+        )
     )
     creator_room = relationship(
         'Room',
@@ -144,14 +161,16 @@ class Config:
         self.member_1 = Member(
             title='first_title',
             first_name='first_name',
-            last_name='first_last_name'
+            last_name='first_last_name',
+            birthday=datetime.date(1997, 9, 1),
         )
         self.session.add(self.member_1)
 
         self.member_2 = Member(
             title='second_title',
             first_name='second_name',
-            last_name='second_last_name'
+            last_name='second_last_name',
+            birthday=datetime.date(1990, 7, 1),
         )
         self.session.add(self.member_2)
 
@@ -178,6 +197,16 @@ class Config:
 
 
 class Test(Config):
+
+    def test_age(self, setup):
+        member_1 = self.session.query(Member) \
+            .get(self.member_1.id)
+        assert member_1.age == 24
+
+        members = self.session.query(Member) \
+            .order_by(Member.age) \
+            .all()
+        assert members[0].age <= members[1].age
 
     def test_update(self, setup):
         update_first_name = self.session.query(Member) \
