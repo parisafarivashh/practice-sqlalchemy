@@ -143,7 +143,7 @@ class Message(Base):
         lazy='joined',
     )
     room_title = column_property(
-        select([Room.title]).where(id == Room.messages.id)
+        select([Room.title]).where(room_id == Room.id).scalar_subquery()
     )
 
 
@@ -189,17 +189,26 @@ class Config:
 
         self.message_1 = Message(
             body='first_body',
+            room_id=self.room_1.id,
         )
         self.session.add(self.message_1)
 
         self.message_2 = Message(
             body='second_body',
+            room_id=self.room_2.id,
         )
         self.session.add(self.message_2)
         self.session.commit()
 
 
 class Test(Config):
+
+    def test_title_room(self, setup):
+        messages = self.session.query(Message) \
+            .order_by(Message.room_title) \
+            .all()
+        print(messages)
+        assert messages[0].room_title == ''
 
     def test_age(self, setup):
         member_1 = self.session.query(Member) \
