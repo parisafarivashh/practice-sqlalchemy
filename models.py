@@ -2,9 +2,11 @@ import pytest
 import datetime
 
 from sqlalchemy import Column, ForeignKey, \
-    Integer, String, create_engine, Date, func, or_, and_, exists
+    Integer, String, create_engine, Date, func, \
+    or_, and_, exists, select, extract, cast
 from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.sql.expression import cast
 
 
 engine = create_engine(
@@ -44,7 +46,9 @@ class Member(Base):
         first_name + ' ' + last_name
     )
     age = column_property(
-        datetime.datetime.now() - birthday
+        select([(datetime.datetime.today().year - extract('year', birthday)) \
+                - cast(((datetime.datetime.today().month, datetime.datetime.today().day ) \
+                        < (extract('month', birthday), extract('day', birthday))), Integer)]).limit(1).scalar_subquery()
     )
     creator_room = relationship(
         'Room',
@@ -149,7 +153,7 @@ class Config:
             title='first_title',
             first_name='first_name',
             last_name='first_last_name',
-            birthday=datetime.datetime(1997, 9, 1)
+            birthday=datetime.date(1997, 9, 1),
         )
         self.session.add(self.member_1)
 
@@ -157,7 +161,7 @@ class Config:
             title='second_title',
             first_name='second_name',
             last_name='second_last_name',
-            birthday=datetime.datetime(1998, 7, 1)
+            birthday=datetime.date(1998, 7, 1),
         )
         self.session.add(self.member_2)
 
@@ -190,9 +194,17 @@ class Test(Config):
             .filter(Member.id == self.member_1.id) \
             .one()
         update_first_name.first_name = 'update_first_name'
+        update_first_name.birthday = datetime.date(1988, 1, 1)
         self.session.add(update_first_name)
         self.session.commit()
         assert update_first_name.id is not None
+
+        get_age = self.session.query(Member) \
+            .get(update_first_name.id)
+        print(update_first_name.birthday)
+        print(get_age.age)
+
+        assert get_age.age == 23
 
         update_title_room = self.session.query(Room) \
             .filter(Room.id == self.room_1.id) \
