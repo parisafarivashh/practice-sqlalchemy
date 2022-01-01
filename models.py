@@ -203,13 +203,13 @@ class Test(Config):
         assert second_member_age.age == 34
 
     def test_update(self, setup):
-        update_member = self.session.query(Member) \
+        update_first_name = self.session.query(Member) \
             .filter(Member.id == self.member_1.id) \
             .one()
-        update_member.first_name = 'update_first_name'
-        self.session.add(update_member)
+        update_first_name.first_name = 'update_first_name'
+        self.session.add(update_first_name)
         self.session.commit()
-        assert update_member.id is not None
+        assert update_first_name.id is not None
 
         update_title_room = self.session.query(Room) \
             .filter(Room.id == self.room_1.id) \
