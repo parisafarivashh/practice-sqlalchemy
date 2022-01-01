@@ -204,7 +204,8 @@ class Test(Config):
         assert member_1.age == 24
 
         members = self.session.query(Member) \
-            .order_by(Member.age)
+            .order_by(Member.age) \
+            .all()
         assert members[0].age <= members[1].age
 
     def test_update(self, setup):
