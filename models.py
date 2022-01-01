@@ -46,10 +46,18 @@ class Member(Base):
         first_name + ' ' + last_name
     )
     age = column_property(
-        datetime.datetime.today().year \
-        -  extract('year', birthday) \
-        - cast(((datetime.datetime.today().month, datetime.datetime.today().day) \
-        < (extract('month', birthday), extract('day', birthday))), Integer)
+        datetime.date.today().year
+        - extract('year', birthday)
+        - cast(
+            ((
+                datetime.date.today().month,
+                datetime.date.today().day,
+                )
+                < (
+                    extract('month', birthday),
+                    extract('day', birthday)
+            )), Integer
+        )
     )
     creator_room = relationship(
         'Room',
