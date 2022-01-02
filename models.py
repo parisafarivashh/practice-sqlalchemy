@@ -4,10 +4,10 @@ import datetime
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, \
     or_, and_, exists, extract, select
-from sqlalchemy.orm import column_property, sessionmaker, relationship
+from sqlalchemy.orm import column_property, sessionmaker, relationship, \
+    joinedload
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.sql.expression import cast
-
+from sqlalchemy.sql.expression import cast, join, outerjoin
 
 engine = create_engine(
     'postgresql+psycopg2://postgres:postgres@localhost/practice'
@@ -62,7 +62,7 @@ class Member(Base):
     creator_room = relationship(
         'Room',
         back_populates='creator',
-        lazy='joined',
+        # lazy='joined',
     )
     messages = relationship(
         'Message',
@@ -95,7 +95,7 @@ class Room(Base):
         'Member',
         cascade='all,delete',
         back_populates='creator_room',
-        lazy='joined',
+        # lazy='joined',
     )
     messages = relationship(
         'Message',
@@ -143,7 +143,7 @@ class Message(Base):
         lazy='joined',
     )
     room_title = column_property(
-        select([Room.title]).where(room_id == Room.id).scalar_subquery()
+        select([Room.title]).where(Room.id == room_id).correlate_except(Room)
     )
 
 
@@ -189,13 +189,15 @@ class Config:
 
         self.message_1 = Message(
             body='first_body',
-            room_id=self.room_1.id,
+            room=self.room_1,
+            sender=self.member_1,
         )
         self.session.add(self.message_1)
 
         self.message_2 = Message(
             body='second_body',
-            room_id=self.room_2.id,
+            room=self.room_2,
+            sender=self.member_2,
         )
         self.session.add(self.message_2)
         self.session.commit()
@@ -204,11 +206,9 @@ class Config:
 class Test(Config):
 
     def test_title_room(self, setup):
-        messages = self.session.query(Message) \
-            .order_by(Message.room_title) \
-            .all()
-        print(messages)
-        assert messages[0].room_title == ''
+        message_1 = self.session.query(Message) \
+            .get(self.message_1.id)
+        assert message_1.room_title == 'first_room'
 
     def test_age(self, setup):
         member_1 = self.session.query(Member) \
@@ -371,7 +371,7 @@ class Test(Config):
                 Member.id == self.member_2.id
             )) \
             .scalar()
-        assert count_messages_of_member == 0
+        assert count_messages_of_member == 1
 
         count_creator_of_room = self.session.query(func.count(Member.first_name)) \
             .filter(and_(
