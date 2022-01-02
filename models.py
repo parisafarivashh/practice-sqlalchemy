@@ -8,6 +8,7 @@ from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import cast
 
+
 engine = create_engine(
     'postgresql+psycopg2://postgres:postgres@localhost/practice'
 )
