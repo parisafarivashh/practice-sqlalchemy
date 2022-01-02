@@ -3,7 +3,7 @@ import datetime
 
 from sqlalchemy import Column, ForeignKey, \
     Integer, String, create_engine, Date, func, \
-    or_, and_, exists, extract
+    or_, and_, exists, extract, select
 from sqlalchemy.orm import column_property, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql.expression import cast
@@ -142,6 +142,9 @@ class Message(Base):
         back_populates='messages',
         lazy='joined',
     )
+    room_title = column_property(
+        select([Room.title]).where(Room.id == room_id).correlate_except(Room)
+    )
 
 
 Base.metadata.create_all(bind=engine)
@@ -186,17 +189,31 @@ class Config:
 
         self.message_1 = Message(
             body='first_body',
+            room=self.room_1,
+            sender=self.member_1,
         )
         self.session.add(self.message_1)
 
         self.message_2 = Message(
             body='second_body',
+            room=self.room_2,
+            sender=self.member_2,
         )
         self.session.add(self.message_2)
         self.session.commit()
 
 
 class Test(Config):
+
+    def test_title_room(self, setup):
+        message_1 = self.session.query(Message) \
+            .get(self.message_1.id)
+        assert message_1.room_title == 'first_room'
+
+        messages = self.session.query(Message) \
+            .order_by(Message.room_title) \
+            .all()
+        assert messages[1].room_title == 'second_room'
 
     def test_age(self, setup):
         member_1 = self.session.query(Member) \
@@ -359,7 +376,7 @@ class Test(Config):
                 Member.id == self.member_2.id
             )) \
             .scalar()
-        assert count_messages_of_member == 0
+        assert count_messages_of_member == 1
 
         count_creator_of_room = self.session.query(func.count(Member.first_name)) \
             .filter(and_(
