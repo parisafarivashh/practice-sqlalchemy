@@ -210,6 +210,11 @@ class Test(Config):
             .get(self.message_1.id)
         assert message_1.room_title == 'first_room'
 
+        messages = self.session.query(Message) \
+            .order_by(Message.room_title) \
+            .all()
+        assert messages[1].room_title == 'second_room'
+
     def test_age(self, setup):
         member_1 = self.session.query(Member) \
             .get(self.member_1.id)
